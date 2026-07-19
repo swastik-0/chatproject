@@ -198,3 +198,86 @@ input[type="text"]:focus { outline: 2px solid var(--primary); }
 
 .message-form input { flex: 1; }
 .message-form button { width: auto; }
+
+/* extra */
+
+/* Card */
+
+.get-started-card{
+    max-width:700px;
+    margin:30px auto;
+    padding:25px;
+}
+
+/* Form */
+
+.responsive-form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+/* Input + Button */
+
+.input-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.input-row input{
+    flex:1;
+    min-width:0;
+}
+
+/* Buttons */
+
+.full-width{
+    width:100%;
+}
+
+/* Mobile */
+
+@media (max-width:768px){
+
+    .get-started-card{
+        padding:18px;
+        margin:15px;
+    }
+
+    .input-row{
+        flex-direction:column;
+    }
+
+    .input-row input,
+    .input-row button{
+        width:100%;
+    }
+
+    .btn-primary{
+        width:100%;
+    }
+
+    h1{
+        font-size:1.8rem;
+    }
+
+}
+
+/* Small phones */
+
+@media (max-width:480px){
+
+    .get-started-card{
+        padding:15px;
+    }
+
+    h1{
+        font-size:1.5rem;
+    }
+
+    p{
+        font-size:0.95rem;
+    }
+
+}
