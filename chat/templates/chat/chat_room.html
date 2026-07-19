@@ -1,0 +1,50 @@
+{% extends "chat/base.html" %}
+{% load static %}
+{% block title %}Room {{ room.code }}{% endblock %}
+
+{% block content %}
+<section class="card chat-card">
+    <div class="chat-header">
+        <a href="{% url 'home' %}" class="back-link">&larr; Home</a>
+        <div>
+            <h2>Room {{ room.code }}</h2>
+            <span class="muted small">
+                <span id="member-count"></span>
+                <span id="member-count-label"></span>
+                in this room
+            </span>
+        </div>
+        <form method="post" action="{% url 'home' %}" class="inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="leave_room">
+            <button type="submit" class="btn-link">Leave room</button>
+        </form>
+    </div>
+
+    <div id="message-list" class="message-list"
+         data-poll-url="{% url 'poll_messages' code=room.code %}"
+         data-send-url="{% url 'send_message' code=room.code %}">
+        {% for m in messages_list %}
+        <div class="bubble {% if m.sender_id == current_user.id %}self{% else %}other{% endif %}" data-id="{{ m.id }}">
+            <div class="bubble-meta">{{ m.sender.username }} &middot; {{ m.timestamp|date:"H:i" }}</div>
+            <div class="bubble-content">{{ m.content }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <form id="message-form" class="message-form">
+        <input type="text" id="message-input" maxlength="2000" placeholder="Type a message..." autocomplete="off" required>
+        <button type="submit" class="btn-primary">Send</button>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.CHAT_CONFIG = {
+    csrfToken: "{{ csrf_token }}",
+    currentUserId: {{ current_user.id }},
+};
+</script>
+<script src="{% static 'chat/js/chat.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "chat/base.html" %}
+{% block title %}Code Chat - Home{% endblock %}
+
+{% block content %}
+{% if not current_user %}
+<section class="card">
+    <h1>Get started</h1>
+    <p class="muted">No sign-up, no passwords. Pick a name (or let us surprise you), then create a room or join one using a 4-digit code.</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_profile">
+        <label for="username">Choose a username (optional)</label>
+        <div class="input-row">
+            <input type="text" id="username" name="username" maxlength="50" placeholder="Leave blank to auto-generate">
+            <button type="button" id="randomize-btn" class="btn-secondary">🎲 Randomize</button>
+        </div>
+        <button type="submit" class="btn-primary">Create my profile</button>
+    </form>
+</section>
+
+{% else %}
+
+<section class="card highlight">
+    <h1>Welcome, {{ current_user.username }}</h1>
+    <form method="post" class="inline-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="reset_profile">
+        <button type="submit" class="btn-link">Start over with a new identity</button>
+    </form>
+</section>
+
+{% if current_user.current_room %}
+<section class="card highlight">
+    <p class="muted">You're currently in room:</p>
+    <div class="code-display">{{ current_user.current_room.code }}</div>
+    <a href="{% url 'chat_room' code=current_user.current_room.code %}" class="btn-primary" style="display:block; text-decoration:none; text-align:center; margin-bottom:10px;">
+        Go to chat
+    </a>
+    <form method="post" class="inline-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="leave_room">
+        <button type="submit" class="btn-link">Leave this room</button>
+    </form>
+</section>
+
+{% else %}
+<section class="card">
+    <h2>Create a room</h2>
+    <p class="muted">Start a new room and get a 4-digit code to share with others.</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_room">
+        <button type="submit" class="btn-primary">Create room</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Join a room</h2>
+    <p class="muted">Enter a 4-digit room code to join an existing chat.</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="join_room">
+        <div class="input-row">
+            <input type="text" name="target_code" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="e.g. 4821" required>
+            <button type="submit" class="btn-primary">Join</button>
+        </div>
+    </form>
+</section>
+{% endif %}
+
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const randomizeBtn = document.getElementById('randomize-btn');
+if (randomizeBtn) {
+    const adjectives = ["Swift","Quiet","Brave","Lucky","Calm","Bright","Clever","Bold","Gentle","Mighty","Silent","Cosmic","Golden","Silver","Rapid","Mystic","Sunny","Frosty","Electric","Wandering"];
+    const nouns = ["Fox","Falcon","Tiger","Panda","Otter","Eagle","Wolf","Dolphin","Comet","Phoenix","Raven","Lynx","Panther","Sparrow","Maverick","Nomad","Voyager","Pioneer","Rocket","Wizard"];
+    randomizeBtn.addEventListener('click', () => {
+        const name = adjectives[Math.floor(Math.random()*adjectives.length)] + nouns[Math.floor(Math.random()*nouns.length)] + Math.floor(Math.random()*900+10);
+        document.getElementById('username').value = name;
+    });
+}
+</script>
+{% endblock %}

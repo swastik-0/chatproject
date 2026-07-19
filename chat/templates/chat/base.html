@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Coffee Chat{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'chat/css/style.css' %}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Coffee Chat</div>
+    <button id="theme-toggle" class="theme-toggle" title="Toggle light/dark mode" aria-label="Toggle theme">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+</header>
+
+<main class="container">
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'chat/js/theme.js' %}"></script>
+<script src="{% static 'chat/js/cleanup.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
