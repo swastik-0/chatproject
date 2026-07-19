@@ -17,7 +17,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-for-local-dev-only')
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-a7s7mdj^mkj!u*2ypx$d$ha%t4c51hlv##ff$k6u-b*q3v3-+g')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Quick-start development settings - unsuitable for production
