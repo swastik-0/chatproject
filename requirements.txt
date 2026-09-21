@@ -1,0 +1,11 @@
+# Core framework
+Django==6.0.3
+asgiref==3.11.1
+sqlparse==0.5.5
+tzdata==2025.3
+
+# Production server (used by Procfile on Render)
+gunicorn==26.0.0
+
+# Static files serving in production
+whitenoise==6.12.0
