@@ -129,10 +129,37 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Django 6 uses STORAGES dict instead of the removed STATICFILES_STORAGE setting.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Sessions expire when the browser is closed (no persistent login).
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-# STORAGES = {
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     },
-# }
+
+# ------------------------------------------------------------------
+# Render / production settings
+# ------------------------------------------------------------------
+# Allow CSRF checks to pass on Render's HTTPS URLs.
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+]
+
+# On Render all traffic is HTTPS – secure the session cookie.
+# (These have no effect locally since DEBUG cookies don't require HTTPS.)
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    CSRF_COOKIE_SECURE = True
+    # Render sits behind a TLS-terminating proxy; tell Django to trust
+    # the X-Forwarded-Proto header it injects.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Suppress Django's default primary-key warning.
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
